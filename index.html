@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Warm Neutral" - A combination of Stone, Slate, and a muted Teal for a professional and calm aesthetic. -->
+    <!-- Application Structure Plan: A dashboard-style single page application. The structure consists of three main parts: 1) An introductory header. 2) An interactive skills summary chart that quantifies the technologies used across all projects. 3) A filterable grid of project cards. Users can click on skill-based filters (e.g., 'Machine Learning', 'Data Engineering') to dynamically display only the relevant projects. This structure was chosen to provide a high-level overview first (via the chart) and then allow users to intuitively drill down into specific areas of interest without navigating away from the page, promoting easy exploration and discoverability. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Comprehensive list of projects with associated technologies and domains.
+        - Goal: Summarize technical proficiency and allow targeted exploration of projects.
+        - Viz/Presentation Method:
+            - A horizontal bar chart (Chart.js/Canvas) to visualize the frequency of key technologies, providing an immediate summary of technical strengths.
+            - A responsive grid of cards (HTML/Tailwind) to present each project's details in a structured and digestible format. Each card contains the project's description, technologies as tags, use cases, and key highlights.
+        - Interaction: 
+            - Filter buttons that, when clicked, use JavaScript to toggle the visibility of project cards based on their assigned data-skill attributes.
+            - A "Show All" button to reset the view.
+        - Justification: This combination of a quantitative summary (chart) and interactive qualitative detail (filterable cards) offers a complete and user-friendly experience. The filtering mechanism is highly intuitive and allows recruiters or stakeholders to quickly find projects relevant to their needs.
+        - Library/Method: Chart.js for the canvas-based chart; Vanilla JavaScript for filtering logic; Tailwind CSS for all styling and layout.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        .project-card {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .card-hidden {
+            transform: scale(0.95);
+            opacity: 0;
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Project Portfolio</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">An interactive summary of key projects demonstrating skills in data engineering, machine learning, and software development. Use the filters to explore projects by domain.</p>
+        </header>
+
+        <!-- Skills Summary Chart -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-center mb-6 text-slate-900">Core Technology Proficiency</h2>
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg">
+                <div class="chart-container">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Controls -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-center mb-6 text-slate-900">Explore Projects</h2>
+            <div id="filter-container" class="flex flex-wrap justify-center gap-2 sm:gap-4">
+                <button data-filter="all" class="filter-btn active bg-slate-800 text-white font-semibold py-2 px-5 rounded-full shadow-md transition-transform transform hover:scale-105">Show All</button>
+                <button data-filter="machine-learning" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 font-semibold py-2 px-5 rounded-full shadow-md transition-transform transform hover:scale-105">Machine Learning</button>
+                <button data-filter="data-engineering" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 font-semibold py-2 px-5 rounded-full shadow-md transition-transform transform hover:scale-105">Data Engineering</button>
+                <button data-filter="time-series" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 font-semibold py-2 px-5 rounded-full shadow-md transition-transform transform hover:scale-105">Time Series</button>
+                <button data-filter="software-dev" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 font-semibold py-2 px-5 rounded-full shadow-md transition-transform transform hover:scale-105">Software Development</button>
+                <button data-filter="data-analysis" class="filter-btn bg-white hover:bg-slate-100 text-slate-700 font-semibold py-2 px-5 rounded-full shadow-md transition-transform transform hover:scale-105">Data Analysis</button>
+            </div>
+        </section>
+
+        <!-- Projects Grid -->
+        <main id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Project 1: Income Classification -->
+            <article class="project-card bg-white rounded-xl shadow-lg p-6 flex flex-col" data-skills="machine-learning,data-engineering,software-dev,data-analysis">
+                <h3 class="text-xl font-bold mb-3 text-slate-900">1. Income Classification</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">An end-to-end MLOps pipeline to classify income levels, featuring data preparation from a normalized database, extensive experimentation with multiple models, and deployment as a containerized cloud application with a Streamlit front-end.</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-700">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2 tech-tags">
+                        <span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Python</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Scikit-learn</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">SQL</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">MLFlow</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">FastAPI</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Docker</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Streamlit</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 2: Temperature Forecast -->
+            <article class="project-card bg-white rounded-xl shadow-lg p-6 flex flex-col" data-skills="time-series,machine-learning,data-analysis">
+                <h3 class="text-xl font-bold mb-3 text-slate-900">2. Short-Term Temp Forecast</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">A sophisticated hybrid model combining ARIMA and LSTM for highly accurate short-term temperature forecasting across 35 U.S. cities, using a dynamic weighting mechanism to optimize predictions based on regional performance.</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-700">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2 tech-tags">
+                        <span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Python</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">TensorFlow/Keras</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">statsmodels</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 3: Job Portal Database -->
+            <article class="project-card bg-white rounded-xl shadow-lg p-6 flex flex-col" data-skills="data-engineering,software-dev">
+                <h3 class="text-xl font-bold mb-3 text-slate-900">3. Job Portal Database System</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Designed and implemented a robust, centralized PostgreSQL database system (normalized to BCNF) to streamline recruitment workflows, featuring advanced SQL queries for skill matching and performance optimization through indexing.</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-700">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2 tech-tags">
+                        <span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">PostgreSQL</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">SQL</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">faker</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">PgAdmin</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 4: LinkedIn Job Market Analysis -->
+            <article class="project-card bg-white rounded-xl shadow-lg p-6 flex flex-col" data-skills="data-engineering,machine-learning,data-analysis">
+                <h3 class="text-xl font-bold mb-3 text-slate-900">4. Job Market Analysis</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">An end-to-end big data pipeline analyzing 1.3M LinkedIn job postings. Utilized Hadoop/HDFS for ingestion, PySpark for distributed processing, and Spark MLlib for job classification, skill demand prediction, and clustering models.</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-700">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2 tech-tags">
+                        <span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Hadoop</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">PySpark</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Spark MLlib</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Word Clouds</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 5: Store Sales Forecast -->
+            <article class="project-card bg-white rounded-xl shadow-lg p-6 flex flex-col" data-skills="time-series,data-analysis">
+                <h3 class="text-xl font-bold mb-3 text-slate-900">5. Time Series Store Sales Forecast</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">Forecasting store sales from a Kaggle dataset with a focus on robust handling of missing data and model selection between classical statistical models like ETS and Holt-Winters, evaluated using RMSE and residual analysis.</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-700">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2 tech-tags">
+                        <span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">R</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Python</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">forecast</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">ggplot2</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 6: E-Commerce Recommendation System -->
+            <article class="project-card bg-white rounded-xl shadow-lg p-6 flex flex-col" data-skills="machine-learning,data-engineering,software-dev">
+                <h3 class="text-xl font-bold mb-3 text-slate-900">6. E-Commerce Reco System</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">A scalable product recommendation system using collaborative filtering (ALS) on implicit user feedback. Exposed via a high-performance FastAPI, containerized with Docker, and deployed on AWS EC2 for real-time recommendations.</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-700">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2 tech-tags">
+                        <span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Python</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">FastAPI</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">implicit</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">scipy</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Docker</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">AWS EC2</span>
+                    </div>
+                </div>
+            </article>
+            
+            <!-- Project 7: Real-Time Analytics Pipeline -->
+            <article class="project-card bg-white rounded-xl shadow-lg p-6 flex flex-col" data-skills="data-engineering,software-dev">
+                <h3 class="text-xl font-bold mb-3 text-slate-900">7. Real-Time Analytics Pipeline</h3>
+                <p class="text-slate-600 mb-4 text-sm flex-grow">A real-time analytics pipeline processing e-commerce user events from Kafka with Spark Structured Streaming. It aggregates insights like funnel analysis and stores results in PostgreSQL for future dashboard visualization.</p>
+                <div class="mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-700">Technologies Used:</h4>
+                    <div class="flex flex-wrap gap-2 tech-tags">
+                        <span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Python</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Apache Kafka</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Spark Streaming</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">PostgreSQL</span><span class="tech-tag text-xs font-medium bg-teal-100 text-teal-800 py-1 px-3 rounded-full">Docker</span>
+                    </div>
+                </div>
+            </article>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Chart.js: Skills Summary Chart
+            const techElements = document.querySelectorAll('.tech-tag');
+            const techCounts = {};
+            techElements.forEach(tag => {
+                const tech = tag.textContent;
+                techCounts[tech] = (techCounts[tech] || 0) + 1;
+            });
+
+            const sortedTech = Object.entries(techCounts).sort(([, a], [, b]) => a - b);
+            const labels = sortedTech.map(item => item[0]);
+            const data = sortedTech.map(item => item[1]);
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Project Count',
+                        data: data,
+                        backgroundColor: 'rgba(13, 148, 136, 0.7)', // teal-600 with opacity
+                        borderColor: 'rgba(15, 118, 110, 1)', // teal-700
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                precision: 0,
+                                color: '#475569' // slate-600
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                             ticks: {
+                                color: '#475569' // slate-600
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Frequency of Key Technologies Across Projects',
+                            font: {
+                                size: 16,
+                                weight: '600'
+                            },
+                            color: '#0f172a' // slate-900
+                        },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 12 },
+                            padding: 10,
+                            cornerRadius: 4,
+                            displayColors: false
+                        }
+                    }
+                }
+            });
+
+            // Filter Logic
+            const filterContainer = document.getElementById('filter-container');
+            const projects = document.querySelectorAll('.project-card');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            filterContainer.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'BUTTON') return;
+
+                const filter = e.target.dataset.filter;
+                
+                // Update active button style
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active', 'bg-slate-800', 'text-white');
+                    btn.classList.add('bg-white', 'hover:bg-slate-100', 'text-slate-700');
+                });
+                e.target.classList.add('active', 'bg-slate-800', 'text-white');
+                e.target.classList.remove('bg-white', 'hover:bg-slate-100', 'text-slate-700');
+
+
+                // Filter projects
+                projects.forEach(project => {
+                    const projectSkills = project.dataset.skills;
+                    if (filter === 'all' || projectSkills.includes(filter)) {
+                        project.classList.remove('card-hidden');
+                    } else {
+                        project.classList.add('card-hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
